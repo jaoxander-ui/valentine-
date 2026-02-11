@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yanna, be my Valentine? 💘</title>
+
+  <style>
+    :root{
+      --bg1:#ffd1dc;
+      --bg2:#ffe8f1;
+      --choco:#5a2a27;
+      --choco2:#7a3b37;
+      --pink:#e6396f;
+      --cream:#fff7fb;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: system-ui, -apple-system, Arial, sans-serif;
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      overflow:hidden;
+      padding: 18px;
+    }
+
+    /* floating tiny hearts */
+    .floaties{
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.55;
+    }
+    .floaties span{
+      position:absolute;
+      animation: drift linear forwards;
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,.1));
+    }
+    @keyframes drift{
+      from{ transform: translateY(110vh) rotate(0deg); opacity:0; }
+      10%{ opacity:1; }
+      to{ transform: translateY(-130vh) rotate(360deg); opacity:0; }
+    }
+
+    .card{
+      width:min(520px, 100%);
+      background: rgba(255,255,255,.92);
+      border: 2px solid rgba(230,57,111,.18);
+      border-radius: 28px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 22px 60px rgba(0,0,0,.16);
+      position:relative;
+      animation: pop .5s ease-out;
+      backdrop-filter: blur(6px);
+    }
+    @keyframes pop { from{ transform:scale(.96); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+    .top{
+      display:flex; align-items:center; gap:14px;
+      padding: 10px 10px 4px;
+    }
+
+    .photo{
+      width:78px; height:78px;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 2px solid rgba(90,42,39,.15);
+      flex: 0 0 auto;
+      background:#eee;
+    }
+    .photo img{
+      width:100%; height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      background: linear-gradient(135deg, var(--choco), var(--choco2));
+      color: var(--cream);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      box-shadow: 0 10px 18px rgba(90,42,39,.22);
+      font-size: .95rem;
+    }
+
+    h1{
+      margin: 10px 10px 6px;
+      font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+      color: var(--pink);
+      line-height:1.1;
+    }
+
+    p{
+      margin: 0 10px 14px;
+      color:#444;
+      font-size: 1.05rem;
+      line-height:1.45;
+    }
+
+    .choco-line{
+      margin: 0 10px 18px;
+      color: var(--choco);
+      font-weight: 700;
+    }
+
+    .buttons{
+      display:flex;
+      justify-content:center;
+      gap: 12px;
+      padding: 6px 10px 10px;
+      flex-wrap: wrap;
+    }
+
+    button{
+      border:0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      cursor:pointer;
+      font-size: 1.05rem;
+      font-weight: 800;
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
+    }
+    button:hover{ transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.18); }
+
+    .yes{
+      background: linear-gradient(135deg, var(--pink), #ff7aa8);
+      color:white;
+    }
+
+    /* The "No" button lives in a little playground so it can run away */
+    .no-zone{
+      position:relative;
+      width: 190px;
+      height: 52px;
+      display:grid;
+      place-items:center;
+    }
+    .no{
+      position:absolute;
+      left: 0;
+      top: 0;
+      width: 190px;
+      height: 52px;
+      background: #ffe1ea;
+      color: var(--pink);
+      border: 2px dashed rgba(230,57,111,.4);
+    }
+
+    .hidden{ display:none; }
+
+    /* Celebration overlay */
+    .celebrate{
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .pop{
+      position:absolute;
+      bottom:-40px;
+      animation: rise linear forwards;
+      font-size: 26px;
+    }
+    @keyframes rise{
+      to{ transform: translateY(-120vh) rotate(380deg); opacity:0; }
+    }
+
+    .footer-note{
+      margin-top: 6px;
+      text-align:center;
+      color:#777;
+      font-size:.9rem;
+    }
+
+    .tiny{
+      font-size:.92rem;
+      color:#666;
+      margin-top: 6px;
+    }
+
+    /* little chocolate drizzle at bottom */
+    .drip{
+      height: 10px;
+      width: calc(100% - 24px);
+      margin: 6px auto 0;
+      background: linear-gradient(90deg, var(--choco), var(--choco2));
+      border-radius: 999px;
+      position:relative;
+      overflow:hidden;
+      opacity:.9;
+    }
+    .drip::after{
+      content:"";
+      position:absolute;
+      inset:-20px;
+      background:
+        radial-gradient(circle at 15% 40%, rgba(255,255,255,.22) 0 12px, transparent 13px),
+        radial-gradient(circle at 40% 65%, rgba(255,255,255,.14) 0 10px, transparent 11px),
+        radial-gradient(circle at 70% 35%, rgba(255,255,255,.18) 0 11px, transparent 12px);
+      transform: rotate(8deg);
+      opacity:.55;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="floaties" id="floaties"></div>
+
+  <main class="card" id="askCard" aria-live="polite">
+    <div class="top">
+      <div class="photo">
+        <!-- Put your uploaded photo in the same folder and name it yanna.jpg -->
+        <img src="yanna.jpg" alt="Us 💕" onerror="this.style.display='none'; this.parentElement.style.background='#f2f2f2';">
+      </div>
+      <div>
+        <div class="badge">🍫 Official Chocolate Department</div>
+        <div class="tiny">Warning: may cause smiling.</div>
+      </div>
+    </div>
+
+    <h1>Yanna… 💘</h1>
+    <p>
+      I know you love chocolates (sometimes more than me 😭🍫)…<br>
+      so I made you a little sweet thing.
+    </p>
+
+    <p class="choco-line">Will you be my Valentine?</p>
+
+    <div class="buttons">
+      <button class="yes" onclick="sayYes()">YES 💖</button>
+
+      <div class="no-zone" aria-label="No button zone">
+        <button class="no" id="noBtn" onclick="nope()">No 🙈</button>
+      </div>
+    </div>
+
+    <div class="drip"></div>
+    <div class="footer-note">Made with love + 100% certified cuteness.</div>
+  </main>
+
+  <main class="card hidden" id="yesCard">
+    <div class="badge" style="margin: 6px auto 10px; width: fit-content;">💝 Valentine status: CONFIRMED</div>
+    <h1>YAYYYY 🥰</h1>
+    <p>
+      Okay so… you’re officially my Valentine now.<br>
+      I’m taking you out and I’m bringing chocolates (obviously). 🍫
+    </p>
+    <p style="font-weight:800; color: var(--choco); margin-top: 10px;">
+      I love you more than all the chocolate in the world.<br>
+      (…and that’s saying A LOT.)
+    </p>
+  </main>
+
+  <div class="celebrate" id="celebrate"></div>
+
+  <script>
+    // Floating background hearts
+    (function makeFloaties(){
+      const wrap = document.getElementById("floaties");
+      const emojis = ["💗","💖","💕","💘","❤️","🍫"];
+      for(let i=0;i<18;i++){
+        const s = document.createElement("span");
+        s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        s.style.left = Math.random()*100 + "vw";
+        s.style.fontSize = (18 + Math.random()*22) + "px";
+        s.style.animationDuration = (6 + Math.random()*8) + "s";
+        s.style.animationDelay = (-Math.random()*10) + "s";
+        wrap.appendChild(s);
+      }
+    })();
+
+    // "No" button runs away
+    const noBtn = document.getElementById("noBtn");
+    const zone = noBtn.parentElement;
+
+    function moveNoButton(){
+      const padding = 6;
+      const maxX = zone.clientWidth - noBtn.clientWidth - padding;
+      const maxY = zone.clientHeight - noBtn.clientHeight - padding;
+
+      const x = Math.max(padding, Math.random() * maxX);
+      const y = Math.max(padding, Math.random() * maxY);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    // Run away on hover/touch
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNoButton(); }, {passive:false});
+
+    function nope(){
+      // If they somehow click it:
+      alert("That button is broken 😌 try the other one");
+      moveNoButton();
+    }
+
+    function sayYes(){
+      document.getElementById("askCard").classList.add("hidden");
+      document.getElementById("yesCard").classList.remove("hidden");
+      party();
+    }
+
+    function party(){
+      const c = document.getElementById("celebrate");
+      const confetti = ["🍫","💖","💘","💕","❤️","😍","🥰","🍓"];
+      for(let i=0;i<55;i++){
+        const el = document.createElement("div");
+        el.className = "pop";
+        el.textContent = confetti[Math.floor(Math.random()*confetti.length)];
+        el.style.left = Math.random()*100 + "vw";
+        el.style.animationDuration = (3 + Math.random()*3.5) + "s";
+        el.style.opacity = (0.65 + Math.random()*0.35);
+        c.appendChild(el);
+        setTimeout(()=>el.remove(), 7000);
+      }
+    }
+
+    // Put the "No" button in the center at load
+    moveNoButton();
+  </script>
+</body>
+</html>
